@@ -2,9 +2,10 @@
 """
 Sum of all elements in a list
 """
+import typing
 
 
-def sum_list(input_list: list[float]) -> float:
+def sum_list(input_list: typing.List[float]) -> float:
     """
     This function returns the sum of all elements in the input list.
     """
