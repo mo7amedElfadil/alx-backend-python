@@ -1,6 +1,4 @@
 #!/usr/bin/env python3
-from typing import List
-import asyncio
 """
 Let's execute multiple coroutines at the same time with async
 Methods:
@@ -11,6 +9,8 @@ Methods:
     takes in 2 integer arguments: n and max_delay. Returns the list of all the
     delays. List will be sorted due to the nature of concurrency.
 """
+from typing import List
+import asyncio
 
 wait_random = __import__('0-basic_async_syntax').wait_random
 
