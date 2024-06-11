@@ -14,7 +14,7 @@ async def measure_runtime() -> float:
     Measure the runtime of async_comprehension four times in parallel.
     """
     start_time: float = time.time()
-    await gather(async_comprehension(), async_comprehension(),
-                 async_comprehension(), async_comprehension())
+    tasks = [async_comprehension() for _ in range(4)]
+    await gather(*tasks)
     end_time: float = time.time()
     return end_time - start_time

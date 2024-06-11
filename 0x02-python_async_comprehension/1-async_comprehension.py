@@ -7,11 +7,12 @@ It is similar to list comprehensions, but it is used to create asynchronous
 generators. This means that you can use it to iterate over asynchronous data
 and generate asynchronous values.
 """
+from typing import List
 
 async_generator = __import__('0-async_generator').async_generator
 
 
-async def async_comprehension() -> list[float]:
+async def async_comprehension() -> List[float]:
     """Async Generator"""
-    result: list[float] = [i async for i in async_generator()]
+    result: List[float] = [i async for i in async_generator()]
     return result
