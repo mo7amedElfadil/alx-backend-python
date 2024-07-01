@@ -4,7 +4,7 @@
 """
 from parameterized import parameterized, parameterized_class
 import unittest
-from unittest.mock import patch, PropertyMock
+from unittest.mock import patch, PropertyMock, Mock
 from client import GithubOrgClient
 from fixtures import TEST_PAYLOAD
 
@@ -79,11 +79,19 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
     def setUpClass(cls):
         """ Set up class
         """
-        config = {'return_value.json.side_effect': [
-            cls.org_payload, cls.repos_payload,
-            cls.org_payload, cls.repos_payload,
-        ]}
-        cls.get_patcher = patch('requests.get', **config)
+        # config = {'return_value.json.side_effect': [
+        #     cls.org_payload, cls.repos_payload,
+        #     cls.org_payload, cls.repos_payload,
+        # ]}
+
+        def side_effect(url):
+            if url == "https://api.github.com/orgs/google":
+                return Mock(json=lambda: cls.org_payload)
+            elif url == "https://api.github.com/orgs/google/repos":
+                return Mock(json=lambda: cls.repos_payload)
+            return Mock(json=lambda: None)
+
+        cls.get_patcher = patch('requests.get', side_effect=side_effect)
         cls.mock_get = cls.get_patcher.start()
 
     @classmethod
