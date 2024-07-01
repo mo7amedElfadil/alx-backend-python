@@ -117,10 +117,11 @@ class TestMemoize(TestCase):
         test = TestClass()
         with mock.patch.object(TestClass, 'a_method',
                                wraps=test.a_method) as mock_method:
-            test.a_property
-            test.a_property
-
-        mock_method.assert_called_once()
+            out1 = test.a_property
+            out2 = test.a_property
+            self.assertEqual(out1, 42)
+            self.assertEqual(out2, 42)
+            mock_method.assert_called_once()
 
 
 if __name__ == '__main__':
