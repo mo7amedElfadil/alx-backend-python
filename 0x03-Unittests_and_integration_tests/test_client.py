@@ -4,7 +4,7 @@
 """
 from parameterized import parameterized, parameterized_class
 import unittest
-from unittest.mock import patch, Mock, PropertyMock
+from unittest.mock import patch, PropertyMock
 from client import GithubOrgClient
 from fixtures import TEST_PAYLOAD
 
@@ -33,22 +33,22 @@ class TestGithubOrgClient(unittest.TestCase):
         """ Test _public_repos_url method
         """
         with patch('client.GithubOrgClient.org',
-                        new_callable=PropertyMock,
-                        return_value={"repos_url": "http://example.com"}
-                        ):
+                   new_callable=PropertyMock,
+                   return_value={"repos_url": "http://example.com"}
+                   ):
             test_client = GithubOrgClient(org)
             self.assertEqual(test_client._public_repos_url,
                              "http://example.com")
 
     @patch('client.get_json', return_value=[{"name": "Google"},
-                                                 {"name": "abc"}])
+                                            {"name": "abc"}])
     def test_public_repos(self, mock_get_json):
         """ Test public_repos method
         """
         with patch('client.GithubOrgClient._public_repos_url',
-                        new_callable=PropertyMock,
-                        return_value="http://example.com"
-                        ) as mock_public_repos_url:
+                   new_callable=PropertyMock,
+                   return_value="http://example.com"
+                   ) as mock_public_repos_url:
             test_client = GithubOrgClient("google")
             expected = [item["name"] for item in mock_get_json.return_value]
             self.assertEqual(test_client.public_repos(), expected)
@@ -108,8 +108,8 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
 
         self.assertEqual(test_class.public_repos(), self.expected_repos)
         self.assertEqual(test_class.public_repos("SomeLicence"), [])
-        self.assertEqual(test_class.public_repos(
-            "apache-2.0"), self.apache2_repos)
+        self.assertEqual(
+                test_class.public_repos("apache-2.0"), self.apache2_repos)
         self.mock_get.assert_called()
 
 
