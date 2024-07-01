@@ -4,12 +4,13 @@
 """
 from parameterized import parameterized
 import requests
-from typing import Any, Dict, List, Tuple, Union
-from unittest import TestCase, main, mock
+from typing import Any, Dict, List, Union
+import unittest
+from unittest.mock import patch, Mock
 from utils import access_nested_map, get_json, memoize
 
 
-class TestAccessNestedMap(TestCase):
+class TestAccessNestedMap(unittest.TestCase):
     """
         Test the access_nested_map method
         Methods:
@@ -54,7 +55,7 @@ class TestAccessNestedMap(TestCase):
             access_nested_map(nested_map, path)
 
 
-class TestGetJson(TestCase):
+class TestGetJson(unittest.TestCase):
     """Test the get_json method
         Methods:
             test_get_json - test the get_json method, which returns the
@@ -72,9 +73,9 @@ class TestGetJson(TestCase):
                 test_url: a url
                 test_payload: a payload
         """
-        mock_response = mock.Mock()
+        mock_response = Mock()
         mock_response.json.return_value = test_payload
-        with mock.patch.object(requests, 'get',
+        with patch.object(requests, 'get',
                                return_value=mock_response) as mock_method:
             test_response = get_json(test_url)
             self.assertEqual(test_response, test_payload)
@@ -82,34 +83,47 @@ class TestGetJson(TestCase):
         mock_method.assert_called_once()
 
 
-class TestMemoize(TestCase):
-    """
-    This class tests the wrapper method memoize from the module utils
-
-    Methods:
-    test_memoize: tests the method and checks if it behaves properly
+class TestMemoize(unittest.TestCase):
+    """ Test the memoize method
+        Methods:
+            test_memoize - test the memoize method, which caches the output of
+            a method
     """
     def test_memoize(self) -> None:
         """
-        This method tests memoize wrapper using a mock object to track
-        the number of calls and a class to see if memoize does work as
-        expected
+            Test the memoize method
+            The memoize method should cache the output of a method
+            Calls to the method with the same arguments should return
+            the cached output
+
+            Class TestClass has a method a_method that returns 42
+            Class TestClass has a property a_property that is memoized
+            Calls to a_property should return 42
         """
+
         class TestClass:
-            def a_method(self):
+            """ TestClass with a_method and a_property
+            """
+            def a_method(self) -> int:
+                """ a_method that returns 42
+                """
                 return 42
 
             @memoize
-            def a_property(self):
+            def a_property(self) -> int:
+                """ a_property that is memoized
+                """
                 return self.a_method()
 
-        with mock.patch.object(TestClass, "a_method",
-                               return_value=42) as mock_a:
-            obj = TestClass()
-            obj.a_property
-            obj.a_property
-            mock_a.assert_called_once()
+        test = TestClass()
+        with patch.object(TestClass, 'a_method',
+                               wraps=test.a_method) as mock_method:
+            out1 = test.a_property
+            out2 = test.a_property
+            self.assertEqual(out1, 42)
+            self.assertEqual(out2, 42)
+            mock_method.assert_called_once()
 
 
 if __name__ == '__main__':
-    main()
+    unittest.main()
