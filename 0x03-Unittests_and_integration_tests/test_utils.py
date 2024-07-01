@@ -2,8 +2,8 @@
 """test_utils.py
    This module contains the test cases for the utils module
 """
-import requests
 from parameterized import parameterized
+import requests
 from unittest import TestCase, main, mock
 from utils import access_nested_map, get_json, memoize
 
@@ -110,10 +110,9 @@ class TestMemoize(TestCase):
 
         test = TestClass()
         with mock.patch.object(TestClass, 'a_method',
-                               return_value = lambda: 42,
-                               ) as mock_method:
-            out1 = test.a_property()
-            out2 = test.a_property()
+                               wraps = test.a_method) as mock_method:
+            out1 = test.a_property
+            out2 = test.a_property
 
         self.assertEqual(out1, 42)
         self.assertEqual(out2, 42)
