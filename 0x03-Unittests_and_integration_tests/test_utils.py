@@ -4,6 +4,7 @@
 """
 from parameterized import parameterized
 import requests
+from typing import Any, Dict, List, Tuple, Union
 from unittest import TestCase, main, mock
 from utils import access_nested_map, get_json, memoize
 
@@ -23,7 +24,9 @@ class TestAccessNestedMap(TestCase):
         ({'a': {'b': 2}}, ['a'], {'b': 2}),
         ({'a': {'b': 2}}, ['a', 'b'], 2)
     ])
-    def test_access_nested_map(self, nested_map, path, expected) -> None:
+    def test_access_nested_map(self, nested_map: Dict[str, Any],
+                               path: List[str], expected: Union[Dict[str, Any],
+                                                                int]) -> None:
         """
             Test the access_nested_map method
             Args:
@@ -37,8 +40,9 @@ class TestAccessNestedMap(TestCase):
         ({}, ['a'], KeyError),
         ({'a': 1}, ['a', 'b'], KeyError)
     ])
-    def test_access_nested_map_exception(self, nested_map,
-                                         path, expected) -> None:
+    def test_access_nested_map_exception(self, nested_map: Dict[str, Any],
+                                         path: List[str],
+                                         expected: Any) -> None:
         """
             Test the access_nested_map method
             Args:
@@ -60,7 +64,8 @@ class TestGetJson(TestCase):
         ("http://example.com", {"payload": True}),
         ("http://holberton.io", {"payload": False}),
     ])
-    def test_get_json(self, test_url, test_payload) -> None:
+    def test_get_json(self, test_url: str,
+                      test_payload: Dict[str, bool]) -> None:
         """test_get_json method
             to test that utils.get_json returns the expected result.
             Args:
