@@ -84,12 +84,19 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
         #     cls.org_payload, cls.repos_payload,
         # ]}
 
-        def side_effect(url):
+        def side_effect(url: str):
+            """
+            This is a side effect method to be added to the requests.get
+            mock to return a mock response with certain attributes
+            """
+            response_mock = Mock()
             if url == "https://api.github.com/orgs/google":
-                return Mock(json=lambda: cls.org_payload)
+                response_mock.json.return_value = cls.org_payload
             elif url == "https://api.github.com/orgs/google/repos":
-                return Mock(json=lambda: cls.repos_payload)
-            return Mock(json=lambda: None)
+                response_mock.json.return_value = cls.repos_payload
+            else:
+                response_mock.json.return_value = None
+            return response_mock
 
         cls.get_patcher = patch('requests.get', side_effect=side_effect)
         cls.mock_get = cls.get_patcher.start()
