@@ -110,7 +110,7 @@ class TestMemoize(TestCase):
 
         test = TestClass()
         with mock.patch.object(TestClass, 'a_method',
-                               wraps = test.a_method) as mock_method:
+                               wraps=test.a_method) as mock_method:
             out1 = test.a_property
             out2 = test.a_property
 
