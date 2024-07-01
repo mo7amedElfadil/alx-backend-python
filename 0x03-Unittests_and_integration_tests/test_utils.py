@@ -23,7 +23,7 @@ class TestAccessNestedMap(TestCase):
         ({'a': {'b': 2}}, ['a'], {'b': 2}),
         ({'a': {'b': 2}}, ['a', 'b'], 2)
     ])
-    def test_access_nested_map(self, nested_map, path, expected):
+    def test_access_nested_map(self, nested_map, path, expected) -> None:
         """
             Test the access_nested_map method
             Args:
@@ -37,7 +37,8 @@ class TestAccessNestedMap(TestCase):
         ({}, ['a'], KeyError),
         ({'a': 1}, ['a', 'b'], KeyError)
     ])
-    def test_access_nested_map_exception(self, nested_map, path, expected):
+    def test_access_nested_map_exception(self, nested_map,
+                                         path, expected) -> None:
         """
             Test the access_nested_map method
             Args:
@@ -59,7 +60,7 @@ class TestGetJson(TestCase):
         ("http://example.com", {"payload": True}),
         ("http://holberton.io", {"payload": False}),
     ])
-    def test_get_json(self, test_url, test_payload):
+    def test_get_json(self, test_url, test_payload) -> None:
         """test_get_json method
             to test that utils.get_json returns the expected result.
             Args:
@@ -82,7 +83,7 @@ class TestMemoize(TestCase):
             test_memoize - test the memoize method, which caches the output of
             a method
     """
-    def test_memoize(self):
+    def test_memoize(self) -> None:
         """
             Test the memoize method
             The memoize method should cache the output of a method
@@ -97,13 +98,13 @@ class TestMemoize(TestCase):
         class TestClass:
             """ TestClass with a_method and a_property
             """
-            def a_method(self):
+            def a_method(self) -> int:
                 """ a_method that returns 42
                 """
                 return 42
 
             @memoize
-            def a_property(self):
+            def a_property(self) -> int:
                 """ a_property that is memoized
                 """
                 return self.a_method()
