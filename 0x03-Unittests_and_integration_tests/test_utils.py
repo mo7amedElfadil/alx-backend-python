@@ -2,6 +2,7 @@
 """test_utils.py
    This module contains the test cases for the utils module
 """
+import requests
 from parameterized import parameterized
 from unittest import TestCase, main, mock
 from utils import access_nested_map, get_json, memoize
@@ -67,8 +68,8 @@ class TestGetJson(TestCase):
         """
         mock_response = mock.Mock()
         mock_response.json.return_value = test_payload
-        with mock.patch('requests.get',
-                        return_value=mock_response) as mock_method:
+        with mock.patch.object(requests, 'get',
+                               return_value=mock_response) as mock_method:
             test_response = get_json(test_url)
             self.assertEqual(test_response, test_payload)
 
@@ -81,7 +82,6 @@ class TestMemoize(TestCase):
             test_memoize - test the memoize method, which caches the output of
             a method
     """
-
     def test_memoize(self):
         """
             Test the memoize method
@@ -98,18 +98,22 @@ class TestMemoize(TestCase):
             """ TestClass with a_method and a_property
             """
             def a_method(self):
+                """ a_method that returns 42
+                """
                 return 42
 
             @memoize
             def a_property(self):
+                """ a_property that is memoized
+                """
                 return self.a_method()
 
         test = TestClass()
         with mock.patch.object(TestClass, 'a_method',
-                               return_value=42,
-                               wraps=test.a_method) as mock_method:
-            out1 = test.a_property
-            out2 = test.a_property
+                               return_value = lambda: 42,
+                               ) as mock_method:
+            out1 = test.a_property()
+            out2 = test.a_property()
 
         self.assertEqual(out1, 42)
         self.assertEqual(out2, 42)
