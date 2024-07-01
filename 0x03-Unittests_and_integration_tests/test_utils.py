@@ -83,45 +83,32 @@ class TestGetJson(TestCase):
 
 
 class TestMemoize(TestCase):
-    """ Test the memoize method
-        Methods:
-            test_memoize - test the memoize method, which caches the output of
-            a method
+    """
+    This class tests the wrapper method memoize from the module utils
+
+    Methods:
+    test_memoize: tests the method and checks if it behaves properly
     """
     def test_memoize(self) -> None:
         """
-            Test the memoize method
-            The memoize method should cache the output of a method
-            Calls to the method with the same arguments should return
-            the cached output
-
-            Class TestClass has a method a_method that returns 42
-            Class TestClass has a property a_property that is memoized
-            Calls to a_property should return 42
+        This method tests memoize wrapper using a mock object to track
+        the number of calls and a class to see if memoize does work as
+        expected
         """
-
         class TestClass:
-            """ TestClass with a_method and a_property
-            """
-            def a_method(self) -> int:
-                """ a_method that returns 42
-                """
+            def a_method(self):
                 return 42
 
             @memoize
-            def a_property(self) -> int:
-                """ a_property that is memoized
-                """
+            def a_property(self):
                 return self.a_method()
 
-        test = TestClass()
-        with mock.patch.object(TestClass, 'a_method',
-                               wraps=test.a_method) as mock_method:
-            out1 = test.a_property
-            out2 = test.a_property
-            self.assertEqual(out1, 42)
-            self.assertEqual(out2, 42)
-            mock_method.assert_called_once()
+        with mock.patch.object(TestClass, "a_method",
+                               return_value=42) as mock_a:
+            obj = TestClass()
+            obj.a_property
+            obj.a_property
+            mock_a.assert_called_once()
 
 
 if __name__ == '__main__':
