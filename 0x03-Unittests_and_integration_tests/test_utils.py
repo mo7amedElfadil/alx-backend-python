@@ -98,14 +98,10 @@ class TestMemoize(TestCase):
             """ TestClass with a_method and a_property
             """
             def a_method(self):
-                """ a_method that returns 42
-                """
                 return 42
 
             @memoize
             def a_property(self):
-                """ a_property that is memoized
-                """
                 return self.a_method()
 
         test = TestClass()
