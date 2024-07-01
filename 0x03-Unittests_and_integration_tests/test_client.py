@@ -91,11 +91,11 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
             """
             response_mock = Mock()
             if url == "https://api.github.com/orgs/google":
-                response_mock.json.return_value = cls.org_payload
+                response_mock.json.side_effect = lambda: cls.org_payload
             elif url == "https://api.github.com/orgs/google/repos":
-                response_mock.json.return_value = cls.repos_payload
+                response_mock.json.side_effect = lambda: cls.repos_payload
             else:
-                response_mock.json.return_value = None
+                response_mock.json.side_effect = lambda: None
             return response_mock
 
         cls.get_patcher = patch('requests.get', side_effect=side_effect)
